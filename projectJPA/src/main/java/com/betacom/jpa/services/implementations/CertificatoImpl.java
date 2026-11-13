@@ -1,0 +1,47 @@
+package com.betacom.jpa.services.implementations;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.betacom.jpa.dto.input.CertificatoReq;
+import com.betacom.jpa.exceptions.AcademyException;
+import com.betacom.jpa.models.Certificato;
+import com.betacom.jpa.models.Socio;
+import com.betacom.jpa.repositories.ICertificatoRepository;
+import com.betacom.jpa.repositories.ISocioRepository;
+import com.betacom.jpa.services.interfaces.ICertificatoServices;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class CertificatoImpl implements ICertificatoServices {
+
+	private final ICertificatoRepository cerR;
+	private final ISocioRepository socR;
+	
+	@Transactional
+	@Override
+	public void updateCertificato(CertificatoReq req) throws Exception {
+		log.debug("Begin updateCertificato {}", req);
+		
+		Socio soc = socR.findById(req.getSocioID())
+				.orElseThrow(() -> new AcademyException("socio-ntfnd"));
+		
+		Certificato cer = null;
+		if (soc.getCertificato() == null) {
+			log.debug("new certificato per {}", soc.getId());
+			cer = new Certificato();
+		} else
+			cer = soc.getCertificato();
+		
+		cer.setDataCertificato(req.getDataCertificato());
+		cer.setTipo(req.getTipo() == null ? false : req.getTipo());
+		
+		soc.setCertificato(cerR.save(cer));		
+		socR.save(soc);
+	}
+
+}

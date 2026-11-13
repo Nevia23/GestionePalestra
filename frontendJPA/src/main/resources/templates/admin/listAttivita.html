@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header
+		th:insert="~{fragments/navigation :: block-navigation('Gestione attività')}"></header>
+	<div class="container-fluid mt-3" align="center">
+		<div th:if="${errorMsg}" class="alert alert-danger"
+			th:text="${errorMsg}"></div>
+		<div class="col-auto ms-auto" style="margin: auto">
+			<a th:href="@{createAttivita}" type="button" class="btn btn-primary">Nuova
+				attività</a>
+		</div>
+		<table class="table table-secondary mt-3"
+			style="width: 40%; text-align: center">
+			<thead>
+				<tr>
+					<th>Descrizione</th>
+					<th>Prezzo</th>
+					<th>Elimina</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="attivita : ${listAttivita}"
+					th:attr="data-id=${attivita.id}" class="clickable-row"
+					style="cursor: pointer">
+					<td align="center">[[${attivita.descrizione}]]</td>
+					<td align="center"
+						th:text="${#numbers.formatDecimal(attivita.prezzo, 1, 2) + ' €'}">[[${attivita.prezzo}]]</td>
+					<td class="noselect" align="center"><a
+						th:href="@{deleteAttivita(attID=${attivita.id})}"
+						onclick="return confirm('Sei sicuro di voler eliminare questa attività?')"
+						type=button
+						class="btn btn-danger noselect"> <i
+							class="bi bi-trash3"></i>
+					</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			const rows = document.querySelectorAll(".clickable-row");
+			rows.forEach(row => {
+				row.addEventListener("click", () => {
+					if (event.target.closest(".noselect"))
+						return;
+					const attivitaId = row.getAttribute("data-id");
+					if(attivitaId)
+						window.location.href = `/admin/updateAttivita?id=${attivitaId}`;
+				})
+			})
+		})
+	</script>
+</body>
+</html>
