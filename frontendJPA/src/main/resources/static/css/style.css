@@ -1,0 +1,126 @@
+body {
+	background-color: #ecd48a;
+	background-image: none;
+	background-size: cover; /* riempie tutto lo schermo */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed; /* resta fermo mentre scorri */
+	min-height: 100vh;
+	margin: 0;
+}
+
+:root {
+	--bs-body-font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+	--bs-primary: #4f7a2c;
+	--bs-primary-rgb: 79, 122, 44;
+	--bs-link-color: #3f6423;
+	--bs-link-hover-color: #2f4c1a;
+}
+
+/* Tabelle */
+.table {
+	--bs-table-bg: #fbf4dc;
+	--bs-table-color: #3b3326;
+}
+
+.table > thead {
+	--bs-table-bg: #7cb342;
+	--bs-table-color: #1b2e0d;
+	--bs-table-border-color: #669636;
+}
+
+/* Bottoni */
+.btn-primary {
+	--bs-btn-color: #fff;
+	--bs-btn-bg: #4f7a2c;
+	--bs-btn-border-color: #4f7a2c;
+	--bs-btn-hover-color: #fff;
+	--bs-btn-hover-bg: #426624;
+	--bs-btn-hover-border-color: #426624;
+	--bs-btn-active-color: #fff;
+	--bs-btn-active-bg: #365420;
+	--bs-btn-active-border-color: #365420;
+	--bs-btn-focus-shadow-rgb: 79, 122, 44;
+	--bs-btn-disabled-bg: #4f7a2c;
+	--bs-btn-disabled-border-color: #4f7a2c;
+}
+
+.btn-secondary {
+	--bs-btn-color: #fff;
+	--bs-btn-bg: #8a5a2b;
+	--bs-btn-border-color: #8a5a2b;
+	--bs-btn-hover-color: #fff;
+	--bs-btn-hover-bg: #744a22;
+	--bs-btn-hover-border-color: #744a22;
+	--bs-btn-active-color: #fff;
+	--bs-btn-active-bg: #623e1c;
+	--bs-btn-active-border-color: #623e1c;
+	--bs-btn-focus-shadow-rgb: 138, 90, 43;
+	--bs-btn-disabled-bg: #8a5a2b;
+	--bs-btn-disabled-border-color: #8a5a2b;
+}
+
+/* Navbar */
+.app-navbar {
+	--bs-navbar-color: rgba(255, 255, 255, .85);
+	--bs-navbar-hover-color: #fff;
+	--bs-navbar-active-color: #fff;
+	--bs-navbar-brand-color: #fff;
+	--bs-navbar-brand-hover-color: #fff;
+	background-color: #4f7a2c;
+	border-bottom: 3px solid #3a5a20;
+}
+
+.activity-card {
+	display: flex;
+	align-items: flex-start;
+	gap: .75rem;
+	padding: .75rem 1rem;
+	margin: 0;
+	background-color: rgba(255, 255, 255, .92);
+	color: var(--bs-body-color);
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	cursor: pointer;
+	transition: border-color .15s, background-color .15s, box-shadow .15s;
+}
+
+.activity-card .form-check-input {
+	float: none;
+	margin: .25rem 0 0 0;
+	flex-shrink: 0;
+}
+
+.activity-card:hover {
+	background-color: #fff;
+}
+
+.activity-card:has(.form-check-input:checked) {
+	border-color: var(--bs-primary);
+	background-color: var(--bs-primary-bg-subtle);
+	box-shadow: 0 0 0 .15rem rgba(var(--bs-primary-rgb), .25);
+}
+
+.page-card {
+	max-width: 1000px;
+	margin: 1.5rem auto;
+	padding: 1.5rem;
+	background-color: rgba(255, 255, 255, .94);
+	border-radius: var(--bs-border-radius-lg);
+	box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25);
+}
+
+.page-title {
+	color: #fff;
+	font-weight: 700;
+	letter-spacing: .02em;
+	text-shadow:
+		0 0 4px rgba(0, 0, 0, .7),
+		0 2px 8px rgba(0, 0, 0, .6);
+}
+
+.table-hover > tbody > tr:hover {
+  --bs-table-hover-bg: #acd48a; /* Scegli il colore di sfondo che preferisci */
+  --bs-table-hover-color: #000000; /* Colore del testo al passaggio del mouse */
+}

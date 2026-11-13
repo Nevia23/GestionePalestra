@@ -19,7 +19,7 @@
 	<div class="container-fluid mt-2" align="center">
 		<div th:if="${errorMsg}" class="alert alert-danger"
 			th:text="${errorMsg}"></div>
-		<form class="form-content" th:action="@{saveAbbonamentoAttivita}"
+		<!-- <form class="form-content" th:action="@{saveAbbonamentoAttivita}"
 			th:object=${param} method="post" style="width: 30%; margin: auto;">
 			<select class="form-select" th:field="*{attivitaID}">
 				<option value="" selected>Selezionare attività</option>
@@ -27,6 +27,31 @@
 					th:text="|${att.descrizione} - ${#numbers.formatDecimal(att.prezzo,1,2)} €|"></option>
 			</select> <input type="hidden" th:field="*{id}"> <input type="hidden"
 				th:field="*{socioID}">
+			<div align="center" class="mt-4">
+				<button type="submit" class="btn btn-info">Aggiungi
+					attività</button>
+			</div>
+		</form> -->
+
+		<form class="form-content" th:action="@{saveAbbonamentoAttivita}"
+			th:object="${param}" method="post" style="width: 30%; margin: auto;">
+
+<!-- 			<label class="form-label fw-semibold">Selezionare attività</label>
+ -->			<div class="vstack gap-2 text-start">
+				<label th:each="att : ${listAttivita}"
+					class="activity-card form-check"> <input type="radio"
+					class="form-check-input" name="attivitaID" th:value="${att.id}"
+					required> <span class="activity-card-content"> <span
+						class="fw-semibold" th:text="${att.descrizione}"></span> <small
+						class="d-block text-muted"
+						th:text="|${#numbers.formatDecimal(att.prezzo,1,2)} €|"></small>
+				</span>
+				</label>
+			</div>
+
+			<input type="hidden" th:field="*{id}"> <input type="hidden"
+				th:field="*{socioID}">
+
 			<div align="center" class="mt-4">
 				<button type="submit" class="btn btn-info">Aggiungi
 					attività</button>

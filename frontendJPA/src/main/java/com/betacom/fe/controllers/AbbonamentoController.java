@@ -38,7 +38,7 @@ public class AbbonamentoController {
 				.retrieve().bodyToMono(SocioDTO.class).block();
 
 		mav.addObject("socio", soc);
-		mav.addObject("titolo", "Elenco abbonamenti per " + soc.getNome() + " " + soc.getCognome());
+		mav.addObject("titolo", "Elenco abbonamenti di " + soc.getNome() + " " + soc.getCognome());
 		return mav;
 	}
 
