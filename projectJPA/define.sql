@@ -23,6 +23,7 @@
         data_certificato date,
         id integer not null auto_increment,
         tipo_certificato bit,
+        validita_certificato integer,
         primary key (id)
     ) engine=InnoDB;
 
@@ -41,6 +42,14 @@
         nome varchar(100) not null,
         email varchar(255),
         primary key (id)
+    ) engine=InnoDB;
+
+    create table utente (
+        role tinyint check ((role between 0 and 1)),
+        email varchar(255),
+        pwd varchar(255),
+        username varchar(255) not null,
+        primary key (username)
     ) engine=InnoDB;
 
     alter table attivita_palestra 

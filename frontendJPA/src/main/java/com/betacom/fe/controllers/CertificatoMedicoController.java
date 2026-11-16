@@ -1,5 +1,8 @@
 package com.betacom.fe.controllers;
 
+import java.util.List;
+
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.betacom.fe.dto.input.CertificatoReq;
+import com.betacom.fe.dto.output.CertificatoDTO;
 import com.betacom.fe.dto.output.ResponseDTO;
 import com.betacom.fe.dto.output.SocioDTO;
 
@@ -27,55 +31,74 @@ public class CertificatoMedicoController {
 
 	@GetMapping("updateCertificatoMedico")
 	public ModelAndView updateCertificatoMedico(@RequestParam Integer id, Model model) {
-		
+
 		ModelAndView mav = new ModelAndView("listCertificatoMedico");
-		
+
 		if (!model.containsAttribute("certificato")) {
 			SocioDTO soc = webclient.get()
-					.uri(uriBuilder -> uriBuilder
-							.path("socio/getById")
-							.queryParam("id", id)
-							.build())
-					.retrieve()
-					.bodyToMono(SocioDTO.class)
-					.block();
-			
+					.uri(uriBuilder -> uriBuilder.path("socio/getById").queryParam("id", id).build()).retrieve()
+					.bodyToMono(SocioDTO.class).block();
+
 			CertificatoReq req = null;
 			if (soc.getCertificato() == null) {
-				req = CertificatoReq.builder()
-						.socioID(id)
-						.build();
+				req = CertificatoReq.builder().socioID(id).build();
 			} else {
 				req = CertificatoReq.builder()
 						.socioID(id)
 						.dataCertificato(soc.getCertificato().getDataCertificato())
-						.tipo(soc.getCertificato().getTipo().equals("normale") ? false : true)  // perché c'è differenza tra String e Boolean
+						.validitaCertificato(soc.getCertificato().getValiditaCertificato())
+						.tipo(soc.getCertificato().getTipo().equals("normale") ? false : true) // perché c'è differenza tra string e boolean																	// tra String e Boolean
 						.build();
 			}
-			
+
 			model.addAttribute("certificato", req);
 		}
-		
+
 		return mav;
 	}
-	
+
 	@PostMapping("saveCertificato")
 	public String saveCertificato(@ModelAttribute("certificato") CertificatoReq req, RedirectAttributes ra) {
-		
+
 		ResponseEntity<ResponseDTO> response = webclient.put()
 				.uri("certificato/update")
 				.bodyValue(req)
 				.exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
 				.block();
-		
+
 		log.debug("response {}", response.getBody().getMsg());
-		
+
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
 			ra.addFlashAttribute("certificato", req);
 			return "redirect:/updateCertificatoMedico?id=" + req.getSocioID();
 		}
-		
+
 		return "redirect:/listSocio";
+	}
+
+	
+	@GetMapping("listCertificato")
+	public ModelAndView listCertificato(@RequestParam(required = false) String stato) {
+		ModelAndView mav = new ModelAndView("listCertificato");
+
+		List<CertificatoDTO> certificati = webclient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("certificato/listCertificato")
+						.build())
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<CertificatoDTO>>() {
+
+				}).block();
+		
+		 if (certificati != null && stato != null && !stato.isBlank()) {
+		        certificati = certificati.stream()
+		                .filter(cert -> stato.equalsIgnoreCase(cert.getStato()))
+		                .toList();
+		    }
+
+		mav.addObject("listCertificato", certificati);
+		mav.addObject("statoSelezionato", stato);
+		return mav;
 	}
 }

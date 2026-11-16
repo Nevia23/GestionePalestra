@@ -35,7 +35,11 @@ public class AdminController {
 	public ModelAndView listAttivita() {
 		ModelAndView mav = new ModelAndView("admin/listAttivita");
 
-		List<AttivitaDTO> att = webclient.get().uri(uriBuilder -> uriBuilder.path("attivita/list").build()).retrieve()
+		List<AttivitaDTO> att = webclient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("attivita/list")
+						.build())
+				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<List<AttivitaDTO>>() {
 				}).block();
 

@@ -26,5 +26,8 @@ public class Certificato {
 	
 	@Column(name="data_certificato")
 	private LocalDate dataCertificato;
+	
+	@Column(name="validita_certificato")
+	private Integer validitaCertificato;
 
 }

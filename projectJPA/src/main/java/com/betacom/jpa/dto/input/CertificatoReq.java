@@ -21,6 +21,8 @@ public class CertificatoReq {
 	@NotNull(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class}, message = "certif-no-data")
 	private LocalDate dataCertificato;
 	
-	@NotNull(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class}, message = "certif-no-data")
+	@NotNull(groups = {ValidationGroup.Create.class, ValidationGroup.Update.class}, message = "socio-no-id")
 	private Integer socioID;
+	
+	private Integer validitaCertificato;
 }

@@ -22,5 +22,6 @@ public class CertificatoReq {
 	private Boolean tipo;  // false normale, true agonistico
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  // per dire al frontend che la data è tipo ISO
 	private LocalDate dataCertificato;
+	private Integer validitaCertificato;
 	private Integer socioID;
 }

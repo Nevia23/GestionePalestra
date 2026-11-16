@@ -37,6 +37,11 @@
 					<td><label class="form-label">Data certificato</label></td>
 					<td><input type="date" th:field="*{dataCertificato}" required></td>
 				</tr>
+				<tr>
+					<td><label class="form-label">Validità (mesi)</label></td>
+					<td><input type="number" class="form-control"
+						th:field="*{validitaCertificato}" min="1"></td>
+				</tr>
 			</table>
 			<div class="mt-4" align="center">
 				<button type="submit" class="btn btn-primary">Registra

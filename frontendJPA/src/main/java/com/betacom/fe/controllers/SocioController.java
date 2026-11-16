@@ -31,7 +31,7 @@ public class SocioController {
 	
 	private final WebClient webclient;
 	
-	@GetMapping("/listSocio")
+	@GetMapping(value = {"/listSocio", "/home"})
 	public ModelAndView listSocio(
 			@RequestParam(required = false) Integer id,
 			@RequestParam(required = false) String nome,

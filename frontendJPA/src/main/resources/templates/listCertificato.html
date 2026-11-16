@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+	<header
+		th:insert="~{fragments/navigation :: block-navigation('Gestione certificati')}"></header>
+
+	<div class="container-fluid mt-2" align="center">
+		<div th:if="${errorMsg}" class="alert alert-danger"
+			th:text="${errorMsg}"></div>
+		<form th:action="@{/listCertificato}" method="get">
+
+			<select name="stato" onchange="this.form.submit()">
+
+				<option value="">Tutti i certificati</option>
+
+				<option value="Valido" th:selected="${statoSelezionato == 'Valido'}">
+					Validi</option>
+
+				<option value="Scaduto"
+					th:selected="${statoSelezionato == 'Scaduto'}">Scaduti</option>
+
+				<option value="Non definita"
+					th:selected="${statoSelezionato == 'Non definita'}">Non
+					definiti</option>
+
+			</select>
+
+		</form>
+		<table class="table table-secondary mt-3 table-hover"
+			style="width: 40%; text-align: center">
+			<thead>
+				<tr>
+					<th>Socio</th>
+					<th>ID certificato</th>
+					<th>Tipo</th>
+					<th>Data</th>
+					<th>Validità (mesi)</th>
+					<th>Stato</th>
+					<th>Azioni</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="certificato : ${listCertificato}"
+					th:attr="data-id=${certificato.id}">
+					<td th:text="${certificato.socioNome}"></td>
+
+					<td th:text="${certificato.id}"></td>
+
+					<td th:text="${certificato.tipo}"></td>
+
+					<td
+						th:text="${certificato.dataCertificato != null ?
+                        #temporals.format(certificato.dataCertificato, 'dd/MM/yyyy') : '-'}">
+					</td>
+					<td
+						th:text="${certificato.validitaCertificato != null ? certificato.validitaCertificato + ' mesi' : '-'}">
+					</td>
+					<td><span class="badge"
+						th:classappend="${certificato.stato == 'Valido'} ?
+                              ' text-bg-success' :
+                              (${certificato.stato == 'Scaduto'} ?
+                              ' text-bg-danger' : ' text-bg-secondary')"
+						th:text="${certificato.stato}"> </span></td>
+
+					<td><a class="btn btn-sm btn-primary"
+						th:href="@{/updateCertificatoMedico(id=${certificato.socioID})}">
+							Modifica </a></td>
+
+				</tr>
+
+				<tr th:if="${#lists.isEmpty(listCertificato)}">
+					<td colspan="7" class="text-muted">Nessun certificato presente
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			const rows = document.querySelectorAll(".clickable-row");
+			rows.forEach(row => {
+				row.addEventListener("click", () => {
+					if (event.target.closest(".noselect"))
+						return;
+					const attivitaId = row.getAttribute("data-id");
+					if(attivitaId)
+						window.location.href = `/admin/updateAttivita?id=${attivitaId}`;
+				})
+			})
+		})
+	</script>
+
+
+
+	</div>
+</body>
+</html>

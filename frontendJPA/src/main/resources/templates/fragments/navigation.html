@@ -6,11 +6,13 @@
 				href="https://www.betacom.it/betacom-academy/">JPA</a>
 
 			<div class="navbar-nav flex-row gap-3">
-				<a class="nav-link menu-link" th:href="@{/listSocio}">Gestione
-					socio</a> <a class="nav-link menu-link"
-					th:href="@{/admin/listAttivita}">Gestione attività</a>
+				<a class="nav-link menu-link" th:href="@{/listSocio}">Gestione socio</a>
+				<a class="nav-link menu-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/listAttivita}">Gestione attività</a>
+				<a class="nav-link menu-link" th:href="@{/listCertificato}">Certificati</a>
 			</div>
-
+			<div class="navbar-nav ms-auto">
+				<a class="nav-link text-danger" th:href="@{/logout}">Logout</a>
+			</div>
 		</div>
 	</nav>
 
