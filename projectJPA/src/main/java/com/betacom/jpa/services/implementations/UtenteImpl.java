@@ -10,6 +10,7 @@ import com.betacom.jpa.dto.output.UtenteDTO;
 import com.betacom.jpa.enums.Roles;
 import com.betacom.jpa.exceptions.AcademyException;
 import com.betacom.jpa.mapper.UtenteMap;
+import com.betacom.jpa.models.Socio;
 import com.betacom.jpa.models.Utente;
 import com.betacom.jpa.repositories.IUtenteRepository;
 import com.betacom.jpa.services.interfaces.IUtenteServices;
@@ -56,8 +57,11 @@ public class UtenteImpl implements IUtenteServices {
 
 	@Override
 	public void delete(String username) throws Exception {
-		// TODO Auto-generated method stub
+		log.debug("delete {}", username);
+		Utente ut = utenteR.findById(username)
+				.orElseThrow(() -> new AcademyException("Utente non trovato"));
 		
+		utenteR.delete(ut);
 	}
 
 	@Override
