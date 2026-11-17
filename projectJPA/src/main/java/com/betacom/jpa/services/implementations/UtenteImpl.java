@@ -42,8 +42,16 @@ public class UtenteImpl implements IUtenteServices {
 
 	@Override
 	public void update(UtenteReq req) throws Exception {
-		// TODO Auto-generated method stub
+		log.debug("update utente {}", req);
 		
+		// controllo se l'utente che voglio modificare esiste o no
+		Utente ut = utenteR.findById(req.getUsername())
+				.orElseThrow(() -> new AcademyException("Utente non trovato"));
+		
+		if (req.getEmail() != null) ut.setEmail(req.getEmail());
+		if (req.getRole() != null) ut.setRole(Roles.valueOf(req.getRole()));
+		
+		utenteR.save(ut);
 	}
 
 	@Override
