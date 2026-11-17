@@ -35,8 +35,11 @@
 					<td align="center">[[${ut.role}]]</td>
 					<td>
 						<div class="d-flex justify-content-center gap-2">
-							<a class="btn btn-sm btn-primary">Modifica</a>
-							<a class="btn btn-sm btn-danger">Elimina</a>
+							<a class="btn btn-sm btn-primary"
+								th:href="@{/admin/updateUtente(username=${ut.username})}">Modifica</a>
+							<a class="btn btn-sm btn-danger"
+								th:href="@{/admin/deleteUtente(username=${ut.username})}"
+								onclick="return confirm('Sei sicuro di volere eliminare questo utente?')">Elimina</a>
 						</div>
 					</td>
 				</tr>

@@ -21,7 +21,9 @@
 		</div>
 	</nav>
 
-	<form th:action="@{saveNuovoUtente}" th:object="${req}" method="post">
+	<form th:action="@{saveNuovoUtente}" th:object="${req}" method="post"
+		align="center">
+		<h1>Registrazione</h1>
 		<div th:if="${errorMsg}" class="alert alert-danger"
 			th:text="${errorMsg}"></div>
 		<div>
@@ -37,7 +39,7 @@
 				class="form-text" placeholder="email">
 		</div>
 		<div>
-			<button type="submit" class="btn btn-primary">Registra</button>
+			<button type="submit" class="btn btn-primary mt-3">Registra</button>
 		</div>
 
 	</form>
