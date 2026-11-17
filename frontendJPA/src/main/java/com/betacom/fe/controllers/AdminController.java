@@ -21,6 +21,7 @@ import com.betacom.fe.dto.input.UtenteReq;
 import com.betacom.fe.dto.output.AttivitaDTO;
 import com.betacom.fe.dto.output.ResponseDTO;
 import com.betacom.fe.dto.output.UtenteDTO;
+import com.betacom.fe.security.UtenteServices;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 
 	private final WebClient webclient;
-
+	private final UtenteServices utenteS;
+	
 	@GetMapping("listAttivita")
 	public ModelAndView listAttivita() {
 		ModelAndView mav = new ModelAndView("admin/listAttivita");
@@ -195,6 +197,39 @@ public class AdminController {
 		}
 		
 		return "redirect:/admin/listUtente";
+	}
+	
+	@GetMapping("createAdmin")
+	public ModelAndView createAdmin(Model model) {
+		ModelAndView mav = new ModelAndView("admin/registrazioneAdmin");
+		
+		if (!model.containsAttribute("admin")) {
+			mav.addObject("admin", new UtenteReq());
+		}
+
+		model.addAttribute("titolo", "Creazione nuovo Admin");
+		return mav;
+	}
+	
+	@PostMapping("saveAdmin")
+	public String saveAdmin(@ModelAttribute("admin") UtenteReq req, RedirectAttributes ra) {
+
+	    req.setRole("ADMIN");
+
+	    ResponseEntity<ResponseDTO> response = webclient.post()
+	            .uri("utente/create")
+	            .bodyValue(req)
+	            .exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
+	            .block();
+
+	    if (!response.getStatusCode().is2xxSuccessful()) {
+	        ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
+	        ra.addFlashAttribute("admin", req);
+	        return "redirect:/admin/createAdmin";
+	    }
+
+	    utenteS.updateUtente(req);
+	    return "redirect:/admin/listUtente";
 	}
 	
 	@GetMapping("deleteUtente")
