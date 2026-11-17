@@ -17,11 +17,11 @@
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
 			<a class="navbar-brand"
-				href="https://www.betacom.it/betacom-academy/">JPA</a>
+				href="https://www.betacom.it/betacom-academy/">Centro sportivo</a>
 		</div>
 	</nav>
-	<form th:action="@{/login}" method='post' align="center">
-		<div>
+	<form th:action="@{/login}" method='post'>
+		<div align="center" class="row mb-4">
 			<h1>Login</h1>
 			<div th:if="${param.error}" style="color: red" class="mb-4">Invalid
 				username password</div>
@@ -33,9 +33,9 @@
 				<input type="password" name="password" class="form-text"
 					placeholder="introdurre password">
 			</div>
-			
-			<div align="center" class="mt-2">
-				<input type="submit" class="btn btn-success" value="Sign up">
+			<div class="d-flex justify-content-center align-items-center gap-1 mt-3">
+				<input type="submit" class="btn btn-success" value="Sign in">
+				<a class="col-1 btn btn-primary" th:href="@{/registry}">Nuovo utente</a>
 			</div>
 		</div>
 

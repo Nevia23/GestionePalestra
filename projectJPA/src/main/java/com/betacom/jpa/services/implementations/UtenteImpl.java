@@ -14,6 +14,7 @@ import com.betacom.jpa.models.Utente;
 import com.betacom.jpa.repositories.IUtenteRepository;
 import com.betacom.jpa.services.interfaces.IUtenteServices;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +26,7 @@ public class UtenteImpl implements IUtenteServices {
 	private final IUtenteRepository utenteR;
 	private final PasswordEncoder passwordEncoder;
 	
+	@Transactional
 	@Override
 	public void create(UtenteReq req) throws Exception {
 		log.debug("create {}", req);
