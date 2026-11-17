@@ -61,8 +61,10 @@ public class UtenteImpl implements IUtenteServices {
 
 	@Override
 	public UtenteDTO getByUsername(String username) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		log.debug("getByUsername {}", username);
+		Utente ut = utenteR.findById(username)
+				.orElseThrow(() -> new AcademyException("Utente non trovato"));
+		return UtenteMap.buildUtenteDTO(ut);
 	}
 
 }

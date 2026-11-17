@@ -32,8 +32,14 @@ public class UtenteController {
 		return ResponseEntity.ok(ResponseDTO.builder().msg("create sucessfull").build());
 	}
 	
-	 @GetMapping("/list")
-	    public ResponseEntity<Object> list() throws Exception {
-	        return ResponseEntity.ok(utenteS.list());
-	    }
+	@GetMapping("/list")
+	public ResponseEntity<Object> list() throws Exception {
+		return ResponseEntity.ok(utenteS.list());
+	}
+	
+	@GetMapping("/getByUsername")
+	public ResponseEntity<Object> getByUsername(
+    		@RequestParam String username) throws Exception {
+        return ResponseEntity.ok(utenteS.getByUsername(username));
+    }
 }
