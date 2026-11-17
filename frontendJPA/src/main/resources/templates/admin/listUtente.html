@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>Elenco utenti</title>
+</head>
+<body>
+	<header
+		th:insert="~{fragments/navigation :: block-navigation('Elenco utenti')}"></header>
+	<div class="container-fluid mt-3" align="center">
+		<table class="table table-secondary mt-2 table-hover">
+			<thead>
+				<tr align="center">
+					<th>Username</th>
+					<th>Email</th>
+					<th>Ruolo</th>
+					<th>Azioni</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="ut : ${listUtente}" th:attr="data-id=${ut.username}"
+					class="clickable-row" style="cursor: pointer">
+					<td align="center">[[${ut.username}]]</td>
+					<td align="center">[[${ut.email}]]</td>
+					<td align="center">[[${ut.role}]]</td>
+					<td>
+						<div class="d-flex justify-content-center gap-2">
+							<a class="btn btn-sm btn-primary">Modifica</a>
+							<a class="btn btn-sm btn-danger">Elimina</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

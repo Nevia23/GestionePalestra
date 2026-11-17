@@ -20,9 +20,9 @@
 	<div class="container-fluid mt-2" align="center">
 		<div th:if="${errorMsg}" class="alert alert-danger"
 			th:text="${errorMsg}"></div>
-		<form th:action="@{/listCertificato}" method="get">
+		<form th:action="@{/listCertificato}" method="get" style="width: 20%; margin: auto">
 
-			<select name="stato" onchange="this.form.submit()">
+			<select class="form-select" name="stato" onchange="this.form.submit()">
 
 				<option value="">Tutti i certificati</option>
 

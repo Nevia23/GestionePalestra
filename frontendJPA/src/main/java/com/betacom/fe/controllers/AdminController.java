@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.betacom.fe.dto.input.AttivitaReq;
 import com.betacom.fe.dto.output.AttivitaDTO;
 import com.betacom.fe.dto.output.ResponseDTO;
+import com.betacom.fe.dto.output.UtenteDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,4 +122,20 @@ public class AdminController {
 		
 		return "redirect:/admin/listAttivita";
 	}
+	
+	@GetMapping("listUtente")
+	public ModelAndView listUtente() {
+		ModelAndView mav = new ModelAndView("admin/listUtente");
+
+		List<UtenteDTO> att = webclient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("utente/list")
+						.build())
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<UtenteDTO>>() {
+				}).block();
+
+		mav.addObject("listUtente", att);
+		return mav;
+	} 
 }

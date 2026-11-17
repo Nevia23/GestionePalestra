@@ -9,6 +9,7 @@
 				<a class="nav-link menu-link" th:href="@{/listSocio}">Gestione socio</a>
 				<a class="nav-link menu-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/listAttivita}">Gestione attività</a>
 				<a class="nav-link menu-link" th:href="@{/listCertificato}">Certificati</a>
+				<a class="nav-link menu-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/listUtente}">Utenti</a>
 			</div>
 			<div class="navbar-nav ms-auto">
 				<a class="nav-link text-danger" th:href="@{/logout}">Logout</a>
