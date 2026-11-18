@@ -181,6 +181,12 @@ public class AdminController {
 		
 		HttpMethod metodo = req.getUsername() == null ? HttpMethod.POST : HttpMethod.PATCH;
 		
+		if (!"USER".equals(req.getRole()) && !"ADMIN".equals(req.getRole())) {
+	        ra.addFlashAttribute("errorMsg", "Ruolo non valido");
+	        ra.addFlashAttribute("utente", req);
+	        return "redirect:" + errorLink;
+	    }
+		
 		ResponseEntity<ResponseDTO> response = webclient.method(metodo)
 				.uri(url)
 				.bodyValue(req)
@@ -233,13 +239,20 @@ public class AdminController {
 	}
 	
 	@GetMapping("deleteUtente")
-	public String deleteUtente(@RequestParam String username) {
+	public String deleteUtente(@RequestParam String username, RedirectAttributes ra) {
 
-		ResponseDTO response = webclient.delete()
-				.uri("utente/delete/{username}", username)
-				.retrieve().bodyToMono(ResponseDTO.class).block();
-
-		log.debug("response user delete {}", response.getMsg());
+		ResponseEntity<ResponseDTO> response = webclient.delete()
+	            .uri("utente/delete/{username}", username)
+	            .exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
+	            .block();
+		
+		log.debug("response user delete {}", response.getBody().getMsg());
+		
+		if (!response.getStatusCode().is2xxSuccessful()) {
+		        ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
+		        return "redirect:/admin/listUtente";
+		    }
+		
 		return "redirect:/admin/listUtente";
 	}
 }

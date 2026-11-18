@@ -32,4 +32,16 @@ public class UtenteServices {
 				);
 		log.debug("utente {} has been created", req.getUsername());
 	}
+	
+	public void updateRuolo(String username, String role) {
+	    if (!inMemoryUserDetailsManager.userExists(username)) return;
+	    inMemoryUserDetailsManager.updateUser(User
+	            .withUserDetails(inMemoryUserDetailsManager.loadUserByUsername(username))
+	            .roles(role)
+	            .build());
+	}
+
+	public void deleteUtente(String username) {
+	    inMemoryUserDetailsManager.deleteUser(username);
+	}
 }

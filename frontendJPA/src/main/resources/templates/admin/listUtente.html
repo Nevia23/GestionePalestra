@@ -18,11 +18,13 @@
 	<header
 		th:insert="~{fragments/navigation :: block-navigation('Elenco utenti')}"></header>
 	<div class="container-fluid mt-3" align="center">
+		<div th:if="${errorMsg}" class="alert alert-danger"
+			th:text="${errorMsg}"></div>
 		<div
 			class="card-header d-flex justify-content-between align-item-center">
 			<a th:href="@{createAdmin}" type="button" class="btn btn-secondary"
-				aria-label="Nuovo Admin" title="Crea un nuovo utente Admin"> Crea Admin
-			</a>
+				aria-label="Nuovo Admin" title="Crea un nuovo utente Admin">
+				Crea Admin </a>
 		</div>
 		<table class="table table-secondary mt-2 table-hover">
 			<thead>
