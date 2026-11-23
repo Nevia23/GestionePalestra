@@ -171,88 +171,93 @@ public class AdminController {
 	    model.addAttribute("titolo", "Modifica utente " + username);
 	    return mav;
 	}
-	
-	@PostMapping("saveUtente")
-	public String saveUtente(@ModelAttribute("utente") UtenteReq req, RedirectAttributes ra) {
-		
-		String operation = req.getUsername() == null ? "create" : "update";
-		String errorLink = req.getUsername() == null ? "createSocio" : "updateSocio?id=" + req.getUsername();
-		String url = "utente/" + operation;
-		
-		HttpMethod metodo = req.getUsername() == null ? HttpMethod.POST : HttpMethod.PATCH;
-		
-		if (!"USER".equals(req.getRole()) && !"ADMIN".equals(req.getRole())) {
-	        ra.addFlashAttribute("errorMsg", "Ruolo non valido");
-	        ra.addFlashAttribute("utente", req);
-	        return "redirect:" + errorLink;
-	    }
-		
-		ResponseEntity<ResponseDTO> response = webclient.method(metodo)
-				.uri(url)
-				.bodyValue(req)
-				.exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
-				.block();
-		
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			log.debug("error found in user create");
-			log.debug("msg: {}", response.getBody().getMsg());
-			ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
-			ra.addFlashAttribute("utente", req);
-			
-			return "redirect:/" + errorLink;
+
+	@GetMapping("createUtente")
+	public ModelAndView createUtente(Model model) {
+		ModelAndView mav = new ModelAndView("admin/registrazioneAdmin");
+
+		if (!model.containsAttribute("utente")) {
+			mav.addObject("utente", new UtenteReq());
 		}
-		
+
+		model.addAttribute("titolo", "Creazione nuovo utente");
+		return mav;
+	}
+
+	@PostMapping("createUtente")
+	public String createUtente(@ModelAttribute("utente") UtenteReq req, RedirectAttributes ra) {
+
+		if (!"USER".equals(req.getRole()) && !"ADMIN".equals(req.getRole())) {
+			ra.addFlashAttribute("errorMsg", "Ruolo non valido");
+			ra.addFlashAttribute("utente", req);
+			return "redirect:/admin/createUtente";
+		}
+
+		ResponseEntity<ResponseDTO> response = webclient.post().uri("utente/create").bodyValue(req)
+				.exchangeToMono(resp -> resp.toEntity(ResponseDTO.class)).block();
+
+		if (response == null || !response.getStatusCode().is2xxSuccessful()) {
+			String msg = response != null && response.getBody() != null ? response.getBody().getMsg()
+					: "Errore durante la creazione dell'utente";
+
+			ra.addFlashAttribute("errorMsg", msg);
+			ra.addFlashAttribute("utente", req);
+			return "redirect:/admin/createUtente";
+		}
+
+		// Sincronizzo Spring Security
+		utenteS.updateUtente(req);
+
 		return "redirect:/admin/listUtente";
 	}
 	
-	@GetMapping("createAdmin")
-	public ModelAndView createAdmin(Model model) {
-		ModelAndView mav = new ModelAndView("admin/registrazioneAdmin");
-		
-		if (!model.containsAttribute("admin")) {
-			mav.addObject("admin", new UtenteReq());
+	@PostMapping("saveUtente")
+	public String saveUtente(@ModelAttribute("utente") UtenteReq req, RedirectAttributes ra) {
+
+		if (!"USER".equals(req.getRole()) && !"ADMIN".equals(req.getRole())) {
+			ra.addFlashAttribute("errorMsg", "Ruolo non valido");
+			ra.addFlashAttribute("utente", req);
+			return "redirect:/admin/updateUtente?username=" + req.getUsername();
 		}
 
-		model.addAttribute("titolo", "Creazione nuovo Admin");
-		return mav;
+		ResponseEntity<ResponseDTO> response = webclient.patch().uri("utente/update").bodyValue(req)
+				.exchangeToMono(resp -> resp.toEntity(ResponseDTO.class)).block();
+
+		if (response == null || !response.getStatusCode().is2xxSuccessful()) {
+			String msg = response != null && response.getBody() != null ? response.getBody().getMsg()
+					: "Errore durante la modifica dell'utente";
+
+			ra.addFlashAttribute("errorMsg", msg);
+			ra.addFlashAttribute("utente", req);
+			return "redirect:/admin/updateUtente?username=" + req.getUsername();
+		}
+
+		// Aggiorno il ruolo nella memoria di Spring Security
+		utenteS.updateRuolo(req.getUsername(), req.getRole());
+
+		return "redirect:/admin/listUtente";
 	}
-	
-	@PostMapping("saveAdmin")
-	public String saveAdmin(@ModelAttribute("admin") UtenteReq req, RedirectAttributes ra) {
 
-	    req.setRole("ADMIN");
-
-	    ResponseEntity<ResponseDTO> response = webclient.post()
-	            .uri("utente/create")
-	            .bodyValue(req)
-	            .exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
-	            .block();
-
-	    if (!response.getStatusCode().is2xxSuccessful()) {
-	        ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
-	        ra.addFlashAttribute("admin", req);
-	        return "redirect:/admin/createAdmin";
-	    }
-
-	    utenteS.updateUtente(req);
-	    return "redirect:/admin/listUtente";
-	}
-	
 	@GetMapping("deleteUtente")
 	public String deleteUtente(@RequestParam String username, RedirectAttributes ra) {
 
 		ResponseEntity<ResponseDTO> response = webclient.delete()
-	            .uri("utente/delete/{username}", username)
-	            .exchangeToMono(resp -> resp.toEntity(ResponseDTO.class))
-	            .block();
-		
+				.uri("utente/delete/{username}", username)
+				.exchangeToMono(resp -> resp.toEntity(ResponseDTO.class)).block();
+
 		log.debug("response user delete {}", response.getBody().getMsg());
-		
+
 		if (!response.getStatusCode().is2xxSuccessful()) {
-		        ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
-		        return "redirect:/admin/listUtente";
-		    }
-		
+			ra.addFlashAttribute("errorMsg", response.getBody().getMsg());
+			return "redirect:/admin/listUtente";
+		}
+
+		// Elimino l'utente anche dalla memoria di Spring Security
+		utenteS.deleteUtente(username);
+
+		log.debug("Utente {} eliminato anche dalla memoria frontend", username);
+
 		return "redirect:/admin/listUtente";
 	}
+
 }
